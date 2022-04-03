@@ -6,7 +6,7 @@ import fcntl
 
 class Camera:
 
-    def __init__(self, devices, name, onFrame=True, lower_val=None, upper_val=None):
+    def __init__(self, devices, name, on_frame=True, lower_val=None, upper_val=None):
 
         if lower_val is None or upper_val is None:
             self.lower_val = [0, 0, 0]
@@ -20,8 +20,9 @@ class Camera:
         self.cam = f'/dev/video{str(self.devices)}'
         self.cam_file = open(f'/dev/video{str(self.devices)}', 'r')
         self.name = name
+        self.on_frame = on_frame
 
-        if onFrame:
+        if on_frame:
             self.cap = cv.VideoCapture(self.cam)
 
     def set_lowerHSV(self, lower):
@@ -50,7 +51,16 @@ class Camera:
         except Exception as e:
             print('get frame', e)
 
-        return frame
+        return mask
+
+    def set_capture(self, on_frame=True):
+        self.on_frame = on_frame
+
+        if on_frame:
+            self.cam = cv.VideoCapture(self.cam)
+
+        else:
+            self.cam.release()
 
     def set_control(self, arg):
         control = v4l2.v4l2_control()
@@ -69,12 +79,14 @@ class Camera:
 
 
 try:
-    camera1 = Camera(0, 'Camera:0')
+    camera1 = Camera(0, 'Camera:0', lower_val=[
+                     110, 150, 20], upper_val=[120, 255, 255])
 except Exception as e:
     print('Camera:0', e)
 
 try:
-    camera2 = Camera(2, 'Camera:1')
+    camera2 = Camera(2, 'Camera:1', lower_val=[
+                     110, 150, 20], upper_val=[120, 255, 255])
 except Exception as e:
     print('Camera:1', e)
 
@@ -83,23 +95,21 @@ if __name__ == "__main__":
     """
         NOTE:
         Yellow: lower: [15, 150, 20], upper: [35, 255, 255]
-        Dark Blue: lower: [15, 150, 20], upper: [35, 255, 255]
+        Dark Blue: lower: [110, 150, 20], upper: [120, 255, 255]
 
     """
 
     pass
 
-    while True:
-        frame = camera2.get_frame()
+    # Testing Camera
+    # Comment terlebih dahulu sebelum bagian buat objek camera1 dan camera2 di atas
+    # camera3 = Camera(2, 'Camera:1', lower_val=[
+    #                  110, 150, 20], upper_val=[120, 255, 255])
 
-        cv.imshow('Test Camera', frame)
+    # while True:
+    #     frame = camera3.get_frame()
 
-        if cv.waitKey(1) & 0xFF == ord('q'):
-            break
+    #     cv.imshow('Test Camera', frame)
 
-    # lower = [110, 150, 20]
-    # upper = [120, 255, 255]
-
-    # camera1 = Camera(0, lower, upper)
-
-    # camera1.open_camera_stream()
+    #     if cv.waitKey(1) & 0xFF == ord('q'):
+    #         break

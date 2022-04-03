@@ -9,8 +9,8 @@ class Camera:
     def __init__(self, devices, name, on_frame=True, lower_val=None, upper_val=None):
 
         if lower_val is None or upper_val is None:
-            self.lower_val = [0, 0, 0]
-            self.upper_val = [1, 1, 1]
+            self.lower_val = [110, 150, 20]
+            self.upper_val = [120, 255, 255]
 
         else:
             self.lower_val = lower_val
@@ -35,23 +35,25 @@ class Camera:
         self.upper_val[1] = upper[1]
         self.upper_val[2] = upper[2]
 
-    def get_frame(self):
+    def HSV_calibration(self, frame):
+        self.upper_val = np.asarray(self.upper_val)
+        self.lower_val = np.asarray(self.lower_val)
 
+        frame = cv.cvtColor(frame, cv.COLOR_RGB2HSV)
+        frame = cv.inRange(frame, self.lower_val, self.upper_val)
+
+        return frame
+
+    def get_frame(self):
         frame = []
 
         try:
             _, frame = self.cap.read()
 
-            self.upper_val = np.asarray(self.upper_val)
-            self.lower_val = np.asarray(self.lower_val)
-
-            frame = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
-            mask = cv.inRange(frame, self.lower_val, self.upper_val)
-
         except Exception as e:
             print('get frame', e)
 
-        return mask
+        return frame
 
     def set_capture(self, on_frame=True):
         self.on_frame = on_frame
@@ -79,14 +81,12 @@ class Camera:
 
 
 try:
-    camera1 = Camera(0, 'Camera:0', lower_val=[
-                     110, 150, 20], upper_val=[120, 255, 255])
+    camera1 = Camera(0, 'Camera:0')
 except Exception as e:
     print('Camera:0', e)
 
 try:
-    camera2 = Camera(2, 'Camera:1', lower_val=[
-                     110, 150, 20], upper_val=[120, 255, 255])
+    camera2 = Camera(2, 'Camera:1')
 except Exception as e:
     print('Camera:1', e)
 
@@ -108,6 +108,7 @@ if __name__ == "__main__":
 
     # while True:
     #     frame = camera3.get_frame()
+    #     frame = camera3.HSV_calibration(frame)
 
     #     cv.imshow('Test Camera', frame)
 

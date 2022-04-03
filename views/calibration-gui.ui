@@ -6,21 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>868</width>
-    <height>626</height>
+    <width>1190</width>
+    <height>817</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="videoFrame">
+   <widget class="QLabel" name="videoFrameHSV">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>140</y>
-      <width>451</width>
-      <height>371</height>
+      <x>470</x>
+      <y>240</y>
+      <width>391</width>
+      <height>321</height>
      </rect>
     </property>
     <property name="text">
@@ -30,8 +30,8 @@
    <widget class="QSlider" name="hSliderUH">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>160</y>
+      <x>950</x>
+      <y>230</y>
       <width>160</width>
       <height>16</height>
      </rect>
@@ -43,8 +43,8 @@
    <widget class="QSlider" name="hSliderUS">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>220</y>
+      <x>950</x>
+      <y>290</y>
       <width>160</width>
       <height>16</height>
      </rect>
@@ -56,8 +56,8 @@
    <widget class="QSlider" name="hSliderUV">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>270</y>
+      <x>950</x>
+      <y>340</y>
       <width>160</width>
       <height>16</height>
      </rect>
@@ -69,8 +69,8 @@
    <widget class="QLabel" name="labelUS">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>190</y>
+      <x>960</x>
+      <y>260</y>
       <width>111</width>
       <height>18</height>
      </rect>
@@ -82,8 +82,8 @@
    <widget class="QLabel" name="labelUV">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>240</y>
+      <x>960</x>
+      <y>310</y>
       <width>81</width>
       <height>18</height>
      </rect>
@@ -95,8 +95,8 @@
    <widget class="QLabel" name="labelUH">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>130</y>
+      <x>960</x>
+      <y>200</y>
       <width>71</width>
       <height>18</height>
      </rect>
@@ -108,8 +108,8 @@
    <widget class="QLabel" name="labelLV">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>450</y>
+      <x>960</x>
+      <y>520</y>
       <width>81</width>
       <height>18</height>
      </rect>
@@ -121,8 +121,8 @@
    <widget class="QLabel" name="labelLH">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>340</y>
+      <x>960</x>
+      <y>410</y>
       <width>71</width>
       <height>18</height>
      </rect>
@@ -134,8 +134,8 @@
    <widget class="QSlider" name="hSliderLS">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>430</y>
+      <x>950</x>
+      <y>500</y>
       <width>160</width>
       <height>16</height>
      </rect>
@@ -147,8 +147,8 @@
    <widget class="QLabel" name="labelLS">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>400</y>
+      <x>960</x>
+      <y>470</y>
       <width>111</width>
       <height>18</height>
      </rect>
@@ -160,8 +160,8 @@
    <widget class="QSlider" name="hSliderLV">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>480</y>
+      <x>950</x>
+      <y>550</y>
       <width>160</width>
       <height>16</height>
      </rect>
@@ -173,8 +173,8 @@
    <widget class="QSlider" name="hSliderLH">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>370</y>
+      <x>950</x>
+      <y>440</y>
       <width>160</width>
       <height>16</height>
      </rect>
@@ -206,13 +206,52 @@
      <string>Play</string>
     </property>
    </widget>
+   <widget class="QLabel" name="videoFrameOri">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>240</y>
+      <width>391</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>190</y>
+      <width>57</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Original</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>190</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Calibrated</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>868</width>
+     <width>1190</width>
      <height>23</height>
     </rect>
    </property>

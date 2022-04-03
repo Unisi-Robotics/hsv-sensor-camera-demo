@@ -32,6 +32,7 @@ class CalibrationGUI(QMainWindow):
         self.frame = []
         self.camera = camera2
 
+        # Camera ComboBox
         self.cameraCBox.addItem(camera1.name)
         self.cameraCBox.addItem(camera2.name)
 
@@ -39,7 +40,12 @@ class CalibrationGUI(QMainWindow):
 
         self.play_button_clicked()
 
-    def display_frame(self, img):
+    def display_frame(self, img, win):
+        """ Method untuk menampilkan frame yang diambil melalui video
+
+        Args:
+            img ('nparray'): frame yang diambil melalui kamera yang terpilih
+        """
         qformat = QImage.Format_Indexed8
         if len(img.shape) == 3:
             if img.shape[2] == 4:
@@ -49,27 +55,43 @@ class CalibrationGUI(QMainWindow):
 
         out_image = QImage(img, img.shape[1],
                            img.shape[0], img.strides[0], qformat)
-        #BGR >> RGB
+        # BGR >> RGB
         out_image = out_image.rgbSwapped()
 
-        self.pixmap = QPixmap.fromImage(out_image)
-        self.videoFrame.setPixmap(self.pixmap)
-        self.videoFrame.setScaledContents(True)
+        # original image frame
+        if win == 1:
+            self.pixmap = QPixmap.fromImage(out_image)
+            self.videoFrameOri.setPixmap(self.pixmap)
+            self.videoFrameOri.setScaledContents(True)
+
+        # HSV calibrated image frame
+        elif win == 2:
+            self.videoFrameHSV.setPixmap(QPixmap(out_image))
+            self.videoFrameHSV.setScaledContents(True)
 
     def play_button_clicked(self):
         text = self.playButton.text()
         if text == "Play":
             self.start_timer(self.update_frame)
+            self.start_timer(self.update_threshold)
             self.playButton.setText('Stop')
         elif text == 'Stop':
             self.stop_timer(self.update_frame)
+            self.stop_timer(self.update_threshold)
             self.playButton.setText('Play')
 
     def update_frame(self):
         if self.camera is not None:
             self.frame = self.camera.get_frame()
             self.frame = imutils.resize(self.frame, height=480)
-            self.display_frame(self.frame)
+            self.display_frame(self.frame, 1)
+
+    def update_threshold(self):
+        if self.camera is not None:
+            self.frame = self.camera.get_frame()
+            self.frame = imutils.resize(self.frame, height=480)
+            self.frame = self.camera.HSV_calibration(self.frame)
+            self.display_frame(self.frame, 2)
 
     def start_timer(self, callback):
         try:

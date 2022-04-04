@@ -30,15 +30,100 @@ class CalibrationGUI(QMainWindow):
         self.timer = QTimer(self)
         self.pixmap = None
         self.frame = []
-        self.camera = camera2
+        self.camera = camera1
 
         # Camera ComboBox
         self.cameraCBox.addItem(camera1.name)
         self.cameraCBox.addItem(camera2.name)
+        self.cameraCBox.currentIndexChanged.connect(self.change_camera)
+
+        # Horizontal Slider
+        self.set_HSV()
+        self.activate_YUV_signal()
+
+        # Label
+        # self.upperHue.setText('0')
+        # self.upperSat.setText('0')
+        # self.upperVal.setText('0')
+
+        # self.lowerHue.setText('0')
+        # self.lowerSat.setText('0')
+        # self.lowerVal.setText('0')
 
         self.timer.start(1)
 
         self.play_button_clicked()
+
+    def set_HSV(self):
+        # Horizontal Slider
+
+        self.MAXIMUM_HSV_HUE = 180
+        self.MAXIMUM_HSV_OTHER = 255
+        self.MINIMUM_HSV = 0
+
+        # upper minimum
+        self.hSliderUH.setMinimum(self.MINIMUM_HSV)
+        self.hSliderUS.setMinimum(self.MINIMUM_HSV)
+        self.hSliderUV.setMinimum(self.MINIMUM_HSV)
+
+        # lower minimum
+        self.hSliderLH.setMinimum(self.MINIMUM_HSV)
+        self.hSliderLS.setMinimum(self.MINIMUM_HSV)
+        self.hSliderLV.setMinimum(self.MINIMUM_HSV)
+
+        # upper maximum
+        self.hSliderUH.setMaximum(self.MAXIMUM_HSV_HUE)
+        self.hSliderUS.setMaximum(self.MAXIMUM_HSV_OTHER)
+        self.hSliderUV.setMaximum(self.MAXIMUM_HSV_OTHER)
+
+        # lower maximum
+        self.hSliderLH.setMaximum(self.MAXIMUM_HSV_HUE)
+        self.hSliderLS.setMaximum(self.MAXIMUM_HSV_OTHER)
+        self.hSliderLV.setMaximum(self.MAXIMUM_HSV_OTHER)
+
+    def activate_YUV_signal(self):
+        # upper minimum
+        self.hSliderUH.valueChanged.connect(self.update_hue_upperSlider)
+        self.hSliderUS.valueChanged.connect(self.update_sat_upperSlider)
+        self.hSliderUV.valueChanged.connect(self.update_val_upperSlider)
+
+        # lower minimum
+        self.hSliderLH.valueChanged.connect(self.update_hue_lowerSlider)
+        self.hSliderLS.valueChanged.connect(self.update_sat_lowerSlider)
+        self.hSliderLV.valueChanged.connect(self.update_val_lowerSlider)
+
+    def update_hue_upperSlider(self):
+        if self.hSliderUH.isEnabled():
+            self.hSliderUH.setValue(self.hSliderUH.value())
+            self.upperHue.setText(str(self.hSliderUH.value()))
+            print(self.hSliderUH.value())
+
+    def update_sat_upperSlider(self):
+        if self.hSliderUS.isEnabled():
+            self.hSliderUS.setValue(self.hSliderUS.value())
+            self.upperSat.setText(str(self.hSliderUS.value()))
+            print(self.hSliderUS.value())
+
+    def update_val_upperSlider(self):
+        if self.hSliderUV.isEnabled():
+            self.hSliderUV.setValue(self.hSliderUV.value())
+            self.upperVal.setText(str(self.hSliderUV.value()))
+            print(self.hSliderUV.value())
+
+    def update_hue_lowerSlider(self):
+        if self.hSliderLH.isEnabled():
+            self.hSliderLH.setValue(self.hSliderLH.value())
+            self.lowerHue.setText(str(self.hSliderLH.value()))
+
+    def update_sat_lowerSlider(self):
+        if self.hSliderLS.isEnabled():
+            self.hSliderLS.setValue(self.hSliderLS.value())
+            self.lowerSat.setText(str(self.hSliderLS.value()))
+
+    def update_val_lowerSlider(self):
+        if self.hSliderLV.isEnabled():
+            self.hSliderLV.setValue(self.hSliderLV.value())
+            self.lowerVal.setText(str(self.hSliderLV.value()))
 
     def display_frame(self, img, win):
         """ Method untuk menampilkan frame yang diambil melalui video
@@ -93,6 +178,13 @@ class CalibrationGUI(QMainWindow):
             self.frame = self.camera.HSV_calibration(self.frame)
             self.display_frame(self.frame, 2)
 
+    def change_camera(self):
+        cam = self.cameraCBox.currentIndex()
+        if cam == 0:
+            self.camera = camera1
+        elif cam == 1:
+            self.camera = camera2
+
     def start_timer(self, callback):
         try:
             self.timer.timeout.disconnect(callback)
@@ -111,7 +203,6 @@ class CalibrationGUI(QMainWindow):
 
 
 if __name__ == "__main__":
-
     try:
         app = QApplication(sys.argv)
         main_window = CalibrationGUI()

@@ -26,6 +26,7 @@ class Camera:
             self.cap = cv.VideoCapture(self.cam)
 
     def set_lowerHSV(self, lower):
+        print(lower)
         self.lower_val[0] = lower[0]
         self.lower_val[1] = lower[1]
         self.lower_val[2] = lower[2]
@@ -104,7 +105,7 @@ if __name__ == "__main__":
     # Testing Camera
     # Comment terlebih dahulu sebelum bagian buat objek camera1 dan camera2 di atas
     # camera3 = Camera(2, 'Camera:1', lower_val=[
-    #                  110, 150, 20], upper_val=[120, 255, 255])
+    #                  110, 150, 120], upper_val=[120, 255, 255])
 
     # while True:
     #     frame = camera3.get_frame()

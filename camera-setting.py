@@ -30,6 +30,8 @@ class CalibrationGUI(QMainWindow):
         self.timer = QTimer(self)
         self.pixmap = None
         self.frame = []
+        self.upper = [1, 1, 1]
+        self.lower = [0, 0, 0]
         self.camera = camera1
 
         # Camera ComboBox
@@ -40,15 +42,6 @@ class CalibrationGUI(QMainWindow):
         # Horizontal Slider
         self.set_HSV()
         self.activate_YUV_signal()
-
-        # Label
-        # self.upperHue.setText('0')
-        # self.upperSat.setText('0')
-        # self.upperVal.setText('0')
-
-        # self.lowerHue.setText('0')
-        # self.lowerSat.setText('0')
-        # self.lowerVal.setText('0')
 
         self.timer.start(1)
 
@@ -96,34 +89,52 @@ class CalibrationGUI(QMainWindow):
         if self.hSliderUH.isEnabled():
             self.hSliderUH.setValue(self.hSliderUH.value())
             self.upperHue.setText(str(self.hSliderUH.value()))
-            print(self.hSliderUH.value())
+            # print(self.hSliderUH.value())
+            self.upper[0] = self.hSliderUH.value()
+            self.camera.set_upperHSV(self.upper)
+            # print(self.upper)
 
     def update_sat_upperSlider(self):
         if self.hSliderUS.isEnabled():
             self.hSliderUS.setValue(self.hSliderUS.value())
             self.upperSat.setText(str(self.hSliderUS.value()))
-            print(self.hSliderUS.value())
+            # print(self.hSliderUS.value())
+            self.upper[1] = self.hSliderUS.value()
+            self.camera.set_upperHSV(self.upper)
+            # print(self.upper)
 
     def update_val_upperSlider(self):
         if self.hSliderUV.isEnabled():
             self.hSliderUV.setValue(self.hSliderUV.value())
             self.upperVal.setText(str(self.hSliderUV.value()))
-            print(self.hSliderUV.value())
+            # print(self.hSliderUV.value())
+            self.upper[2] = self.hSliderUV.value()
+            self.camera.set_upperHSV(self.upper)
+            # print(self.upper)
 
     def update_hue_lowerSlider(self):
         if self.hSliderLH.isEnabled():
             self.hSliderLH.setValue(self.hSliderLH.value())
             self.lowerHue.setText(str(self.hSliderLH.value()))
+            self.lower[0] = self.hSliderLH.value()
+            self.camera.set_upperHSV(self.lower)
+            # print(self.lower)
 
     def update_sat_lowerSlider(self):
         if self.hSliderLS.isEnabled():
             self.hSliderLS.setValue(self.hSliderLS.value())
             self.lowerSat.setText(str(self.hSliderLS.value()))
+            self.lower[1] = self.hSliderLS.value()
+            self.camera.set_upperHSV(self.lower)
+            # print(self.lower)
 
     def update_val_lowerSlider(self):
         if self.hSliderLV.isEnabled():
             self.hSliderLV.setValue(self.hSliderLV.value())
             self.lowerVal.setText(str(self.hSliderLV.value()))
+            self.lower[2] = self.hSliderLV.value()
+            self.camera.set_upperHSV(self.lower)
+            # print(self.lower)
 
     def display_frame(self, img, win):
         """ Method untuk menampilkan frame yang diambil melalui video

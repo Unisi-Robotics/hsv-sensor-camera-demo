@@ -26,7 +26,6 @@ class Camera:
             self.cap = cv.VideoCapture(self.cam)
 
     def set_lowerHSV(self, lower):
-        print(lower)
         self.lower_val[0] = lower[0]
         self.lower_val[1] = lower[1]
         self.lower_val[2] = lower[2]
@@ -76,7 +75,7 @@ class Camera:
             return {'min': qcontrol.minimum, 'max': qcontrol.maximum, 'default': qcontrol.default, 'value': control.value}
 
         except Exception as e:
-            print(f'{arg} is not supported')
+            print(f'{arg} is not supported: {e}')
 
         return None
 

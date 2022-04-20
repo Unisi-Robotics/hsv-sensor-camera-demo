@@ -323,7 +323,7 @@
      <string>0</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="playButton_2">
+   <widget class="QPushButton" name="saveButton">
     <property name="geometry">
      <rect>
       <x>350</x>
@@ -336,7 +336,7 @@
      <string>Save</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="ObjectCBox">
+   <widget class="QComboBox" name="objectCBox">
     <property name="geometry">
      <rect>
       <x>590</x>

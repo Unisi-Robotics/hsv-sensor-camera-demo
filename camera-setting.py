@@ -14,14 +14,14 @@ from PyQt5.QtGui import QImage
 import sys
 import os
 import imutils
+import redis as rd
 
 path = os.path.dirname(os.path.abspath('robot-camera'))
-print(path)
 
 
 class CalibrationGUI(QMainWindow):
 
-    def __init__(self):
+    def __init__(self, database):
         super().__init__()
         self.path_ui = path + "/views/calibration-gui.ui"
 
@@ -30,8 +30,10 @@ class CalibrationGUI(QMainWindow):
         self.timer = QTimer(self)
         self.pixmap = None
         self.frame = []
-        self.upper = [1, 1, 1]
-        self.lower = [0, 0, 0]
+        self.upper = []
+        self.lower = []
+        self.db = database
+        self.objects = ['ball', 'field', 'line', 'obstacle']
         self.camera = camera1
 
         # Camera ComboBox
@@ -39,13 +41,91 @@ class CalibrationGUI(QMainWindow):
         self.cameraCBox.addItem(camera2.name)
         self.cameraCBox.currentIndexChanged.connect(self.change_camera)
 
+        # Objects ComboBox
+        for i, obj in enumerate(self.objects):
+            self.objectCBox.addItem(obj, i)
+
         # Horizontal Slider
         self.set_HSV()
         self.activate_YUV_signal()
 
+        # get camm param from redis
+        self.load_cameraParameter()
+
+        # Saved Button
+        self.saveButton.clicked.connect(self.saveButton_clicked)
+
         self.timer.start(1)
 
         self.play_button_clicked()
+
+    def load_cameraParameter(self):
+        upper_check_val = self.db.hget(
+            self.camera.name,
+            self.camera.name + '_upper'
+        )
+        lower_check_val = self.db.hget(
+            self.camera.name,
+            self.camera.name + '_lower'
+        )
+
+        print(self.camera.name)
+
+        if upper_check_val is not None and lower_check_val is not None:
+            upper = str(self.db.hget(self.camera.name, self.camera.name + '_upper')
+                        ).strip("b'").split(',')
+
+            upper = list(map(int, upper))
+
+            lower = str(self.db.hget(self.camera.name, self.camera.name + '_lower')
+                        ).strip("b'").split(',')
+
+            lower = list(map(int, lower))
+
+        else:
+            upper = [0, 0, 0]
+            lower = [0, 0, 0]
+
+        print(f"Lower: {lower}")
+        print(f"Upper: {upper}")
+
+        self.upper = upper
+        self.lower = lower
+
+        # update slider value
+        self.hSliderUH.setValue(upper[0])
+        self.hSliderUS.setValue(upper[1])
+        self.hSliderUV.setValue(upper[2])
+
+        self.hSliderLH.setValue(lower[0])
+        self.hSliderLS.setValue(lower[1])
+        self.hSliderLV.setValue(lower[2])
+
+        # update label value
+        self.upperHue.setText(str(upper[0]))
+        self.upperSat.setText(str(upper[1]))
+        self.upperVal.setText(str(upper[2]))
+
+        self.lowerHue.setText(str(lower[0]))
+        self.lowerSat.setText(str(lower[1]))
+        self.lowerVal.setText(str(lower[2]))
+
+        self.camera.set_upperHSV(self.upper)
+        self.camera.set_lowerHSV(self.lower)
+
+    def update_colorValue():
+        pass
+
+    def saveButton_clicked(self):
+        lower_color = str(self.lower).translate({ord(i): None for i in '[]'})
+        upper_color = str(self.upper).translate({ord(i): None for i in '[]'})
+
+        print(lower_color, upper_color)
+        self.db.hset(self.camera.name, self.camera.name +
+                     '_upper', upper_color)
+        self.db.hset(self.camera.name, self.camera.name +
+                     '_lower', lower_color)
+        print('Save button clicked')
 
     def set_HSV(self):
         # Horizontal Slider
@@ -205,9 +285,14 @@ class CalibrationGUI(QMainWindow):
 
 
 if __name__ == "__main__":
+
+    database = rd.Redis(
+        host='localhost',
+        port=6379
+    )
     try:
         app = QApplication(sys.argv)
-        main_window = CalibrationGUI()
+        main_window = CalibrationGUI(database)
         main_window.setWindowTitle('Color Calibration App')
 
         main_window.show()
